@@ -1,10 +1,6 @@
 #pragma once
 #ifndef OBSTRUCTIONS_H_INCLUDED
 #define OBSTRUCTIONS_H_INCLUDED
-
-
-
-#endif // OBSTRUCTIONS_H_INCLUDED
 #include <iostream>
 #include <fstream>
 
@@ -121,3 +117,6 @@ void AutoMove(){
         settings();
     }
 }
+
+
+#endif // OBSTRUCTIONS_H_INCLUDED
