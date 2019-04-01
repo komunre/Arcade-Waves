@@ -52,7 +52,7 @@ void credits(){
 bool settings(){
     system("cls");
     cout << "version: 1.0.2" << endl;
-    cout << "Support: " << endl << "Mail: koliziy5@gmail.com" << endl << "Discord: https://discord.gg/G8zuAxB" << endl;
+    cout << "Support: " << endl << "Mail: koliziy5@gmail.com" << endl << "Discord: https://discord.gg/aVsMeGk" << endl;
     if (Boot == false){
         cout << "Do you want to exit?" << endl << "y/n" << endl;
         char exit;
