@@ -1,6 +1,6 @@
 # Minigames
 
-These are arcades and other small games that I wrote. At the moment there are only two, but it is planned to add Ping pong.
+These are arcades and other small games that I wrote.
 ***
 `Newest version: 1.0.2`
 
