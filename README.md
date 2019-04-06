@@ -4,7 +4,6 @@ These are arcades and other small games that I wrote.
 ***
 `Newest version: 1.1.2`
 
-**Ping pong not ready**
 
 How to install
 =====================
