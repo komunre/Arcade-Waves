@@ -10,7 +10,7 @@ int pp_fieldX = 600;
 int pp_fieldY = 300;
 int playerX = 500;
 int playerY = pp_fieldY / 2;
-int enemyX = 20;
+int enemyX = 38;
 int enemyY = pp_fieldY / 2;
 float BallX;
 float BallY;
