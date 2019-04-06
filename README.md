@@ -2,7 +2,7 @@
 
 These are arcades and other small games that I wrote.
 ***
-`Newest version: 1.0.2`
+`Newest version: 1.1.2`
 
 **Ping pong not ready**
 
