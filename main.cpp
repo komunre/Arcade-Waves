@@ -5,7 +5,7 @@
 #include "doodle_jump.h"
 #include <windows.h>
 #include <ctime>
-#include <conio.h> //Для использования _getch() которая ждёт символ и сразу передаёт его без enter
+#include <conio.h>
 #include <stdio.h>
 #include <vector>
 #include <cstdlib>
@@ -17,7 +17,7 @@
 using namespace std;
 
 void ErrorOfLoading(){
-    cout << "Support: " << endl << "Mail: koliziy5@gmail.com" << endl << "Discord: komunre#2298" << endl;
+    cout << "Support: " << endl << "Mail: koliziy5@gmail.com" << endl << "Discord: https://discord.gg/aVsMeGk" << endl;
     cout << "Send a screenshot in a letter for support to get help" << endl;
     Sleep(5000);
     throw;
@@ -81,7 +81,7 @@ int main()
         ErrorOfLoading();
     }
     ball.setTexture(Tball);
-    ball.setOrigin(16, 16);
+    ball.setOrigin(8, 8);
     ball.setPosition(pp_fieldX / 2, pp_fieldY / 2);
     if (!TfieldBorder.loadFromFile("images/border.png")){
         ErrorOfLoading();
@@ -103,6 +103,12 @@ int main()
     music.setVolume(30);
     music.setLoop(true);
     music.play();
+    EnemyScore.setString(to_string(VarEnemyScore));
+    EnemyScore.setFont(calibri);
+    EnemyScore.setCharacterSize(20);
+    PlayerScore.setString(to_string(VarPlayerScore));
+    PlayerScore.setFont(calibri);
+    PlayerScore.setCharacterSize(20);
     sf::Time runtime = runProgramm.getElapsedTime();
     ofstream log("highscores.txt");
     log << "launch time: " << runtime.asMilliseconds() << endl;
@@ -118,6 +124,7 @@ int main()
     one.SetBegin(x / 3, y / 4);
     one.appearance = 'W';
     RandPosition();
+    window.setFramerateLimit(60);
     while(window.isOpen()){
         sf::Event event;
         while(window.pollEvent(event)){
@@ -137,6 +144,7 @@ int main()
                 runtime = runProgramm.getElapsedTime();
                 ofstream Game1Exit("highscores.txt", ios::app);
                 Game1Exit << "Catch highscore: " << highscore << endl;
+                Game1Exit << "Ping pong highscore: " << Highscore[0] << " : " << Highscore[1] << endl;
                 Game1Exit << "User played: " << runtime.asSeconds() << endl << "Settings exit" << endl;
                 Game1Exit.close();
                 return 0;
@@ -155,6 +163,7 @@ int main()
                     runtime = runProgramm.getElapsedTime();
                     ofstream Game2Exit("highscores.txt", ios::app);
                     Game2Exit << "Catch highscore: " << highscore << endl;
+                    Game2Exit << "Ping pong highscore: " << Highscore[0] << " : " << Highscore[1] << endl;
                     Game2Exit << "User played: " << runtime.asSeconds() << endl << "Settings exit" << endl;
                     Game2Exit.close();
                     return 0;
@@ -166,15 +175,17 @@ int main()
                 pp_draw();
                 window.setActive(true);
                 moveboard();
+                if (Exit == true){
+                    runtime = runProgramm.getElapsedTime();
+                    ofstream Game3Exit("highscores.txt", ios::app);
+                    Game3Exit << "Catch highscore: " << highscore << endl;
+                    Game3Exit << "Ping pong highscore: " << Highscore[0] << " : " << Highscore[1] << endl;
+                    Game3Exit << "User played: " << runtime.asSeconds() << endl << "Settings exit" << endl;
+                    Game3Exit.close();
+                    return 0;
+                }
                 moveball();
-                checkCollision();
                 moveEnemyBoard();
-            }
-            else if (game == 4){
-                window.setActive(false);
-                draw();
-                window.setActive(true);
-                GoRight();
             }
             window.display();
         }
@@ -182,6 +193,7 @@ int main()
     runtime = runProgramm.getElapsedTime();
     ofstream played("highscores.txt", ios::app);
     played << "Catch highscore: " << highscore << endl;
+    played << "Ping pong highscore: " << Highscore[0] << " : " << Highscore[1] << endl;
     played << "User played: " << runtime.asSeconds() << endl << "Window closed" << endl;
     played.close();
     return 0;

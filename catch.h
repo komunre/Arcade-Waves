@@ -37,13 +37,15 @@ char hero = 'g';
 char Move;
 int portalx[2];
 int portaly[2];
+int AIOrLM;
+int Acceleration;
 string consolescore;
 int highscore = 0;
-string Developers[16]{"Programmers:", "Komunre", " ", "Painters:", "Iskra", "Phinn.Human", " ", "Music:", "Executus", " ", "Testers:", "IllnfernoDashli", "Jlemijkon", " ", "Special thanks:", "Jlemikon"};
+string Developers[17]{"Programmers:", "Komunre", " ", "Painters:", "Iskra", "Phinn.Human", " ", "Music:", "Executus", " ", "Testers:", "IllnfernoDashli", "Jlemijkon", "Yuzua", " ", "Special thanks:", "Jlemikon"};
 void credits(){
     system("cls");
     int peoples = 0;
-    for (int x = 0; x != 16; x++){
+    for (int x = 0; x != 17; x++){
         Sleep(2000);
         cout << Developers[x] << endl;
     }
@@ -51,7 +53,7 @@ void credits(){
 }
 bool settings(){
     system("cls");
-    cout << "version: 1.0.2" << endl;
+    cout << "version: 1.1.2" << endl;
     cout << "Support: " << endl << "Mail: koliziy5@gmail.com" << endl << "Discord: https://discord.gg/aVsMeGk" << endl;
     if (Boot == false){
         cout << "Do you want to exit?" << endl << "y/n" << endl;
@@ -61,8 +63,12 @@ bool settings(){
                 Exit = true;
                 return true;
         }
+        else if (exit != 'n'){
+            settings();
+            return false;
+        }
     }
-    cout << "What game would you like to play?" << endl << "1. Catch" << endl << "2. Obstructions" << endl;
+    cout << "What game would you like to play?" << endl << "1. Catch" << endl << "2. Obstructions" << endl << "3. Ping pong" << endl;
     cin >> game;
     if (game == 1){
         coordinatesX = x / 2;
@@ -80,13 +86,18 @@ bool settings(){
     else if (game == 2){
         cout << "Enter speed of a game (how much sleep in milliseconds): ";
         cin >> speed;
-        window.setActive(false);
     }
     else if (game == 3){
-        window.setActive(false);
-    }
-    else if (game == 4){
-        window.setActive(false);
+        cout << "Would you like" << endl << "1. AI" << endl << "2. Local multiplayer" << endl;
+        cin >> AIOrLM;
+        if (AIOrLM != 1 && AIOrLM != 2){
+            settings();
+        }
+        cout << "Woul you like" << endl << "1. Disable acceleration" << endl << "2. Enable acceleration" << endl;
+        cin >> Acceleration;
+        if (Acceleration != 1 && Acceleration != 2){
+            settings();
+        }
     }
     else{
         settings();
@@ -148,7 +159,7 @@ void screen(int Coordx, int Coordy){ //Выводит поле с g
     done = true;
     textscore.setPosition(0, 400);
     window.draw(textscore);
-    cout << "Enter a, w, s or d to move" << endl << "g is you. You need to catch W. @ is portals" << endl;
+    cout << "Enter a, w, s or d to move" << endl;
     window.display();
     window.setActive(false);
     }
@@ -253,6 +264,9 @@ void in_the_zone(enemy& one){
         consolescore = "Score: " + to_string(score);
         textscore.setString(consolescore);
         randxy(one.coordx, one.coordy);
+        if (score > highscore){
+            highscore = score;
+        }
         if (enableportals == true){
             portal();
         }
