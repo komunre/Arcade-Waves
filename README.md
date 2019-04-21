@@ -2,7 +2,7 @@
 
 These are arcades and other small games that I wrote.
 
-`Newest version: 1.1.3`
+`Newest version: 1.1.4`
 
 
 How to install
