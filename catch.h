@@ -9,6 +9,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <SFML/Audio.hpp>
 using namespace std;
 sf::Texture Tplayer;
 sf::Texture Tenemy;
@@ -22,7 +23,9 @@ sf::Sprite border;
 sf::Sprite player;
 sf::Sprite windowEnemy;
 sf::Sprite Sportal;
+sf::Music music;
 sf::RenderWindow window(sf::VideoMode(600, 430), "Minigames!");
+bool MusicLoaded = false;
 int Boot = true;
 int game;
 bool done = false;
@@ -53,7 +56,14 @@ void credits(){
 }
 bool settings(){
     system("cls");
-    cout << "version: 1.1.2" << endl;
+    cout << "         \"             \"" << endl
+     << "mmmmm  mmm    m mm   mmm     mmmm   mmm   mmmmm   mmm    mmm" << endl
+        << "# # #    #    #\"  #    #    #\" \"#  \"   #  # # #  #\"  #  #   \"" << endl
+        << "# # #    #    #   #    #    #   #  m\"\"\"#  # # #  #\"\"\"\"   \"\"\"m" << endl
+        << "# # #  mm#mm  #   #  mm#mm  \"#m\"#  \"mm\"#  # # #  \"#mm\"  \"mmm\"" << endl
+         << "                             m  #" << endl
+         << "                             \"\"\"\"" << endl;
+    cout << "version: 1.1.4" << endl;
     cout << "Support: " << endl << "Mail: koliziy5@gmail.com" << endl << "Discord: https://discord.gg/aVsMeGk" << endl;
     if (Boot == false){
         cout << "Do you want to exit?" << endl << "y/n" << endl;
@@ -66,6 +76,17 @@ bool settings(){
         else if (exit != 'n'){
             settings();
             return false;
+        }
+    }
+    if (MusicLoaded == true){
+        cout << "what to do with music?" << endl << "1. Play" << endl << "2. Stop" << endl << "3. Nothing" << endl;
+        int SettingsMusic;
+        cin >> SettingsMusic;
+        if (SettingsMusic == 1){
+            music.play();
+        }
+        else if (SettingsMusic == 2){
+            music.stop();
         }
     }
     cout << "What game would you like to play?" << endl << "1. Catch" << endl << "2. Obstructions" << endl << "3. Ping pong" << endl;
@@ -88,12 +109,12 @@ bool settings(){
         cin >> speed;
     }
     else if (game == 3){
-        cout << "Would you like" << endl << "1. AI" << endl << "2. Local multiplayer" << endl;
+        cout << "What would you like" << endl << "1. AI" << endl << "2. Local multiplayer" << endl;
         cin >> AIOrLM;
         if (AIOrLM != 1 && AIOrLM != 2){
             settings();
         }
-        cout << "Woul you like" << endl << "1. Disable acceleration" << endl << "2. Enable acceleration" << endl;
+        cout << "What would you like" << endl << "1. Disable acceleration" << endl << "2. Enable acceleration" << endl;
         cin >> Acceleration;
         if (Acceleration != 1 && Acceleration != 2){
             settings();

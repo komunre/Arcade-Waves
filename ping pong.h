@@ -29,7 +29,6 @@ void pp_draw(){
     window.setActive(true);
     window.clear(sf::Color::Black);
     system("cls");
-    cout << "BallX: " << BallX << " BallY: " << BallY << endl << " playerX: " << playerX << " playerY: " << playerY << endl << " enemyX: " << enemyX << " enemyY: " << enemyY << endl << "BallSpeedY: " << BallSpeedY << endl;
     window.draw(fieldBorder);
     playerAndEnemy.setPosition(playerX, playerY);
     window.draw(playerAndEnemy);
@@ -72,12 +71,11 @@ void moveboard(){
     else{
         CurrentPlayerPlatformDirection = stop;
     }
-    cout << CurrentPlayerPlatformDirection << endl;
 }
 void checkCollision(){
     BallX = ball.getPosition().x;
     BallY = ball.getPosition().y;
-    if ((BallX < playerX + 32 && BallX >= playerX + 16) && (BallY - 8 < playerY + 64 && BallY + 8 >= playerY)){
+    if ((BallX < playerX + 32 && BallX >= playerX + 16) && (BallY < playerY + 64 && BallY + 16 >= playerY)){
         BallSpeed = -BallSpeed;
         if (Acceleration == 2){
             BallSpeed -= 0.3;
@@ -119,7 +117,7 @@ void checkCollision(){
         }
         CurrentBallDirection = LEFT;
     }
-    else if ((BallX < enemyX + 32 && BallX >= enemyX) && (BallY - 8 < enemyY + 64 && BallY + 8 >= enemyY)){
+    else if ((BallX < enemyX + 32 && BallX >= enemyX) && (BallY < enemyY + 64 && BallY + 16 >= enemyY)){
         BallSpeed = -BallSpeed;
         if (Acceleration == 2){
             BallSpeed += 0.3;
@@ -164,11 +162,11 @@ void checkCollision(){
         VarPlayerScore++;
         PlayerScore.setString(to_string(VarPlayerScore));
     }
-    else if (BallY + 8 >= pp_fieldY - 16){
-        BallSpeedY = -BallSpeedY;
+    else if (BallY + 16 >= pp_fieldY){
+        BallSpeedY = -3;
     }
-    else if (BallY - 8 <= 0){
-        BallSpeedY = -BallSpeedY;
+    else if (BallY <= 0){
+        BallSpeedY = 3;
     }
     if (Highscore[0] < VarEnemyScore){
         Highscore[0] = VarEnemyScore;
