@@ -5,7 +5,7 @@
 
 How to install
 =====================
-Unpack all files in folder and download [music](https://drive.google.com/open?id=1IumFXr8ad1uYC6iPsBjOCfiDrXN2U3Sn) to folder "other".
+Press "Clone or download", download zip and unpack all files in folder.
 
 You need SFML-2.5.1 to compile this code
 
