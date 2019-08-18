@@ -1,3 +1,18 @@
+/* Copyright (C) 2019  Proskuryakov N. V.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+
 #pragma once
 #ifndef OBSTRUCTIONS_H_INCLUDED
 #define OBSTRUCTIONS_H_INCLUDED
@@ -11,8 +26,8 @@ sf::Sprite road;
 sf::Texture Tobstruction, Thouse, Tcar;
 sf::Sprite obstruction, house, car;
 sf::Text obtextscore;
-int OB_x = 4;
-int OB_y = 14;
+const int OB_x = 4;
+const int OB_y = 14;
 int Auto = OB_x / 2;
 int OB_Score = 0;
 int ObstructionX, ObstructionY;

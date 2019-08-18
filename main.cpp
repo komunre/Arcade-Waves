@@ -1,3 +1,18 @@
+/* Copyright (C) 2019  Proskuryakov N. V.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+
 #include <iostream>
 #include "catch.h"
 #include "obstructions.h"
@@ -13,8 +28,16 @@
 #include <SFML/Audio.hpp>
 #include <fstream>
 #include "ping pong.h"
+#include <direct.h>
 
 using namespace std;
+
+sf::Clock runProgramm;
+sf::Time runtime;
+
+string Key;
+bool ActiveKey = false;
+string Line;
 
 void ErrorOfLoading(){
     cout << "Support: " << endl << "Mail: koliziy5@gmail.com" << endl << "Discord: https://discord.gg/aVsMeGk" << endl;
@@ -22,9 +45,21 @@ void ErrorOfLoading(){
     Sleep(5000);
     throw;
 }
+void GameExitFunction(){
+    runtime = runProgramm.getElapsedTime();
+    ofstream GameExit("highscores.txt", ios::app);
+    GameExit << "Catch highscore: " << highscore << endl;
+    GameExit << "Ping pong highscore: " << Highscore[0] << " : " << Highscore[1] << endl;
+    GameExit << "User played: " << runtime.asSeconds() << endl << "Settings exit" << endl;
+    GameExit.close();
+}
+void InvalidLicense(){
+    cout << "Invalid license!" << endl;
+    Sleep(2000);
+}
+
 int main()
 {
-    sf::Clock runProgramm;
     if (!calibri.loadFromFile("other/calibri.ttf")){
         ErrorOfLoading();
         throw;
@@ -60,7 +95,7 @@ int main()
         ErrorOfLoading();
     }
     car.setTexture(Tcar);
-    if (!Tportal.loadFromFile("images/portal2.png")){
+    if (!Tportal.loadFromFile("images/portal2.png")){runtime = runProgramm.getElapsedTime();
         ErrorOfLoading();
     }
     Sportal.setTexture(Tportal);
@@ -81,7 +116,6 @@ int main()
         ErrorOfLoading();
     }
     ball.setTexture(Tball);
-    ball.setOrigin(8, 8);
     ball.setPosition(pp_fieldX / 2, pp_fieldY / 2);
     if (!TfieldBorder.loadFromFile("images/border.png")){
         ErrorOfLoading();
@@ -95,28 +129,32 @@ int main()
     obtextscore.setFillColor(sf::Color::Black);
     obtextscore.setCharacterSize(20);
     obtextscore.setString("Score: 0");
-    sf::Music music;
     if (!music.openFromFile("other/Executus - Start given.wav")){
-        ErrorOfLoading();
+        ofstream Error("Error_log.txt");
+        if (Error.is_open()){
+            Error << "Music \"Executus - Start Given.wav\" not loaded" << endl;
+        }
+        Error.close();
         throw;
     }
-    music.setVolume(30);
-    music.setLoop(true);
-    music.play();
+    else{
+        MusicLoaded = true;
+        music.setVolume(20);
+        music.setLoop(true);
+        music.play();
+    }
     EnemyScore.setString(to_string(VarEnemyScore));
     EnemyScore.setFont(calibri);
     EnemyScore.setCharacterSize(20);
     PlayerScore.setString(to_string(VarPlayerScore));
     PlayerScore.setFont(calibri);
     PlayerScore.setCharacterSize(20);
-    sf::Time runtime = runProgramm.getElapsedTime();
+    runtime = runProgramm.getElapsedTime();
     ofstream log("highscores.txt");
     log << "launch time: " << runtime.asMilliseconds() << endl;
     log.close();
     srand(time(0));
-    if (settings() == true){
-        return 0;
-    }
+    settings();
     if (enableportals == true){
                 portal();
             }
@@ -136,17 +174,9 @@ int main()
         if (game == 1){
                 window.setActive(false);
                 screen(one.coordx, one.coordy);
-                window.setActive(true);
-                window.setActive(false);
                 moving();
                 window.setActive(true);
             if (Exit == true){
-                runtime = runProgramm.getElapsedTime();
-                ofstream Game1Exit("highscores.txt", ios::app);
-                Game1Exit << "Catch highscore: " << highscore << endl;
-                Game1Exit << "Ping pong highscore: " << Highscore[0] << " : " << Highscore[1] << endl;
-                Game1Exit << "User played: " << runtime.asSeconds() << endl << "Settings exit" << endl;
-                Game1Exit.close();
                 return 0;
             }
             teleportation(one);
@@ -160,12 +190,7 @@ int main()
                 AutoMove();
                 GoDown();
                 if (Exit == true){
-                    runtime = runProgramm.getElapsedTime();
-                    ofstream Game2Exit("highscores.txt", ios::app);
-                    Game2Exit << "Catch highscore: " << highscore << endl;
-                    Game2Exit << "Ping pong highscore: " << Highscore[0] << " : " << Highscore[1] << endl;
-                    Game2Exit << "User played: " << runtime.asSeconds() << endl << "Settings exit" << endl;
-                    Game2Exit.close();
+                    GameExitFunction();
                     return 0;
                 }
                 Sleep(speed);
@@ -174,17 +199,12 @@ int main()
                 window.setActive(false);
                 pp_draw();
                 window.setActive(true);
+                moveball();
                 moveboard();
                 if (Exit == true){
-                    runtime = runProgramm.getElapsedTime();
-                    ofstream Game3Exit("highscores.txt", ios::app);
-                    Game3Exit << "Catch highscore: " << highscore << endl;
-                    Game3Exit << "Ping pong highscore: " << Highscore[0] << " : " << Highscore[1] << endl;
-                    Game3Exit << "User played: " << runtime.asSeconds() << endl << "Settings exit" << endl;
-                    Game3Exit.close();
+                    GameExitFunction();
                     return 0;
                 }
-                moveball();
                 moveEnemyBoard();
             }
             window.display();

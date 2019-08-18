@@ -1,15 +1,31 @@
+/* Copyright (C) 2019  Proskuryakov N. V.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+
 #ifndef CATCH_H_INCLUDED
 #define CATCH_H_INCLUDED
 #include <iostream>
 #include <windows.h>
 #include <ctime>
-#include <conio.h> //Для использования _getch() которая ждёт символ и сразу передаёт его без enter
+#include <conio.h>
 #include <stdio.h>
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Audio.hpp>
+#include <fstream>
 using namespace std;
 sf::Texture Tplayer;
 sf::Texture Tenemy;
@@ -24,14 +40,14 @@ sf::Sprite player;
 sf::Sprite windowEnemy;
 sf::Sprite Sportal;
 sf::Music music;
-sf::RenderWindow window(sf::VideoMode(600, 430), "Minigames!");
+sf::RenderWindow window(sf::VideoMode(800, 430), "Minigames!");
 bool MusicLoaded = false;
 int Boot = true;
 int game;
 bool done = false;
 int speed;
-int x = 20;
-int y = 20;
+const int x = 20;
+const int y = 20;
 bool enableportals;
 bool Exit = false;
 int coordinatesX, coordinatesY;
@@ -44,7 +60,7 @@ int AIOrLM;
 int Acceleration;
 string consolescore;
 int highscore = 0;
-string Developers[17]{"Programmers:", "Komunre", " ", "Painters:", "Iskra", "Phinn.Human", " ", "Music:", "Executus", " ", "Testers:", "IllnfernoDashli", "Jlemijkon", "Yuzua", " ", "Special thanks:", "Jlemikon"};
+string Developers[17]{"Programmers:", "Komunre", " ", "Painters:", "Iskra", "Phinn.Human", " ", "Music:", "Executus https://soundcloud.com/execute-murlock", " ", "Testers:", "IllnfernoDashli", "Jlemijkon", "Yuzua", " ", "Special thanks:", "Jlemikon"};
 void credits(){
     system("cls");
     int peoples = 0;
@@ -56,6 +72,9 @@ void credits(){
 }
 bool settings(){
     system("cls");
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    cout << (char)169 << " Proskuryakov N. V. 2018" << endl;
     cout << "         \"             \"" << endl
      << "mmmmm  mmm    m mm   mmm     mmmm   mmm   mmmmm   mmm    mmm" << endl
         << "# # #    #    #\"  #    #    #\" \"#  \"   #  # # #  #\"  #  #   \"" << endl
@@ -63,8 +82,24 @@ bool settings(){
         << "# # #  mm#mm  #   #  mm#mm  \"#m\"#  \"mm\"#  # # #  \"#mm\"  \"mmm\"" << endl
          << "                             m  #" << endl
          << "                             \"\"\"\"" << endl;
-    cout << "version: 1.1.4" << endl;
-    cout << "Support: " << endl << "Mail: koliziy5@gmail.com" << endl << "Discord: https://discord.gg/aVsMeGk" << endl;
+    cout << "version: 1.1.5" << endl;
+    cout << "------------------------------------------------" << endl;
+    cout << "|Support: ";
+    for (int x = 10; x != 48; x ++){
+        cout << ' ';
+    }
+    cout << '|' << endl;
+    cout << "|Mail: koliziy5@gmail.com";
+    for (int x = 25; x != 48; x ++){
+        cout << ' ';
+    }
+    cout << '|' << endl;
+    cout << "|Discord: https://discord.gg/aVsMeGk";
+    for (int x = 36; x != 48; x ++){
+        cout << ' ';
+    }
+    cout << '|' << endl;
+    cout << "------------------------------------------------" << endl;
     if (Boot == false){
         cout << "Do you want to exit?" << endl << "y/n" << endl;
         char exit;
@@ -79,8 +114,31 @@ bool settings(){
         }
     }
     if (MusicLoaded == true){
-        cout << "what to do with music?" << endl << "1. Play" << endl << "2. Stop" << endl << "3. Nothing" << endl;
+        cout << "What music would you like?" << endl << "1. Executus - Start Given" << endl << "2. Executus - Alarm" << endl << "3. Nothing" << endl;
         int SettingsMusic;
+        cin >> SettingsMusic;
+        if (SettingsMusic == 1){
+            if (!music.openFromFile("other/Executus - Start given.wav")){
+                MusicLoaded = false;
+                throw;
+            }
+            music.play();
+        }
+        else if (SettingsMusic == 2){
+            if (!music.openFromFile("other/Executus - Alarm.wav")){
+                ofstream MusicError("error_log.txt");
+                if (MusicError.is_open()){
+                    MusicError << "Music \"Executus - Alarm.wav\" not loaded" << endl;
+                }
+                MusicLoaded = false;
+                throw;
+            }
+            music.play();
+        }
+        else if (SettingsMusic == 3){
+
+        }
+        cout << "what to do with music?" << endl << "1. Play" << endl << "2. Stop" << endl << "3. Nothing" << endl;
         cin >> SettingsMusic;
         if (SettingsMusic == 1){
             music.play();

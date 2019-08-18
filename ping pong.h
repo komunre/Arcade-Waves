@@ -1,3 +1,18 @@
+/* Copyright (C) 2019  Proskuryakov N. V.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+
 #ifndef PING_PONG_H_INCLUDED
 #define PING_PONG_H_INCLUDED
 #include "catch.h"
@@ -6,12 +21,12 @@ sf::Sprite playerAndEnemy, ball, fieldBorder;
 sf::Text EnemyScore, PlayerScore;
 int VarEnemyScore = 0;
 int VarPlayerScore = 0;
-int pp_fieldX = 600;
-int pp_fieldY = 300;
-int playerX = 500;
+const int pp_fieldX = 600;
+const int pp_fieldY = 300;
+const int playerX = 500;
 int playerY = pp_fieldY / 2;
-int enemyX = 38;
-int enemyY = pp_fieldY / 2;
+const int enemyX = 38;
+float enemyY = pp_fieldY / 2;
 float BallX;
 float BallY;
 float BallSpeed = 4;
@@ -19,10 +34,9 @@ float BallSpeedY = 0;
 int Highscore[2] = {0, 0};
 enum BallDirection {RIGHT, LEFT};
 BallDirection CurrentBallDirection;
-enum EnemyPlatformDirection {UP, DOWN, STOP};
-EnemyPlatformDirection CurrentEnemyPlatformDirection;
-enum PlayerPlatformDirection {up, down, stop};
-PlayerPlatformDirection CurrentPlayerPlatformDirection;
+enum RacketDirection {UP, DOWN, STOP};
+RacketDirection CurrentEnemyPlatformDirection;
+RacketDirection CurrentPlayerPlatformDirection;
 sf::Clock LastPositionClock;
 
 void pp_draw(){
@@ -44,11 +58,11 @@ void pp_draw(){
 void moveboard(){
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && playerY - 4 > 0){
         playerY -= 4;
-        CurrentPlayerPlatformDirection = up;
+        CurrentPlayerPlatformDirection = UP;
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && playerY + 4 < pp_fieldY - 64){
         playerY += 4;
-        CurrentPlayerPlatformDirection = down;
+        CurrentPlayerPlatformDirection = DOWN;
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)){
         BallX = pp_fieldX / 2;
@@ -69,19 +83,30 @@ void moveboard(){
         credits();
     }
     else{
-        CurrentPlayerPlatformDirection = stop;
+        CurrentPlayerPlatformDirection = STOP;
     }
 }
 void checkCollision(){
     BallX = ball.getPosition().x;
     BallY = ball.getPosition().y;
-    if ((BallX < playerX + 32 && BallX >= playerX + 16) && (BallY < playerY + 64 && BallY + 16 >= playerY)){
-        BallSpeed = -BallSpeed;
-        if (Acceleration == 2){
-            BallSpeed -= 0.3;
+    if ((BallX < playerX + 32 && BallX >= playerX + 16) && (BallY < playerY + 64 && BallY >= playerY)){
+        if (BallY < playerY + 32 && BallY > playerY + 26){
+            BallSpeedY = 5;
+            BallY = playerY + 32;
+        }
+        else if (BallY + 16 < playerY + 6 && BallY + 16 > playerY){
+            BallSpeedY = -5;
+            BallY = playerY;
+        }
+        else{
+            BallX = playerX;
+            BallSpeed = -BallSpeed;
+            if (Acceleration == 2){
+                BallSpeed -= 0.3;
+            }
         }
         switch(CurrentPlayerPlatformDirection){
-        case up:
+        case UP:
             if (BallSpeedY <= 0){
                 BallSpeedY = -3;
             }
@@ -89,7 +114,7 @@ void checkCollision(){
                 BallSpeedY = 0;
             }
             break;
-        case down:
+        case DOWN:
             if (BallSpeedY >= 0){
                 BallSpeedY = 3;
             }
@@ -97,7 +122,7 @@ void checkCollision(){
                 BallSpeedY = 0;
             }
             break;
-        case stop:
+        case STOP:
             if (BallY < playerY + 16 && BallY > playerY){
                 if (BallSpeedY <= 0){
                     BallSpeedY = -3;
@@ -118,6 +143,7 @@ void checkCollision(){
         CurrentBallDirection = LEFT;
     }
     else if ((BallX < enemyX + 32 && BallX >= enemyX) && (BallY < enemyY + 64 && BallY + 16 >= enemyY)){
+        BallX = enemyX + 32;
         BallSpeed = -BallSpeed;
         if (Acceleration == 2){
             BallSpeed += 0.3;
@@ -194,10 +220,10 @@ void moveEnemyBoard(){
     if (AIOrLM == 1){
     int CurrentBallPosition = ball.getPosition().y - 16;
         if (CurrentBallPosition > enemyY){
-            enemyY += 3;
+            enemyY += 2.5;
         }
         else if (CurrentBallPosition < enemyY){
-            enemyY -= 3;
+            enemyY -= 2.5;
         }
     }
     if (AIOrLM == 2){
