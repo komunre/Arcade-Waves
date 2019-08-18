@@ -135,7 +135,6 @@ int main()
             Error << "Music \"Executus - Start Given.wav\" not loaded" << endl;
         }
         Error.close();
-        throw;
     }
     else{
         MusicLoaded = true;

@@ -120,7 +120,6 @@ bool settings(){
         if (SettingsMusic == 1){
             if (!music.openFromFile("other/Executus - Start given.wav")){
                 MusicLoaded = false;
-                throw;
             }
             music.play();
         }
@@ -131,7 +130,6 @@ bool settings(){
                     MusicError << "Music \"Executus - Alarm.wav\" not loaded" << endl;
                 }
                 MusicLoaded = false;
-                throw;
             }
             music.play();
         }
