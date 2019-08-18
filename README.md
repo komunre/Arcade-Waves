@@ -1,4 +1,4 @@
-# Minigames
+# Arcade Waves
 
 These are arcades and other small games that I wrote.
 
