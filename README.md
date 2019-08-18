@@ -1,6 +1,6 @@
 # Arcade Waves
 
-`Newest version: 1.1.6`
+`Newest version: 1.1.5`
 
 
 How to install
