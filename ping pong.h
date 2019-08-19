@@ -29,6 +29,7 @@ const int enemyX = 38;
 float enemyY = pp_fieldY / 2;
 float BallX;
 float BallY;
+float LastBallX;
 float BallSpeed = 4;
 float BallSpeedY = 0;
 int Highscore[2] = {0, 0};
@@ -38,6 +39,7 @@ enum RacketDirection {UP, DOWN, STOP};
 RacketDirection CurrentEnemyPlatformDirection;
 RacketDirection CurrentPlayerPlatformDirection;
 sf::Clock LastPositionClock;
+bool PlayerFail = false;
 
 void pp_draw(){
     window.setActive(true);
@@ -53,6 +55,7 @@ void pp_draw(){
     window.draw(EnemyScore);
     PlayerScore.setPosition(400, 100);
     window.draw(PlayerScore);
+    ball.setPosition(BallX, BallY);
     window.setActive(false);
 }
 void moveboard(){
@@ -89,14 +92,12 @@ void moveboard(){
 void checkCollision(){
     BallX = ball.getPosition().x;
     BallY = ball.getPosition().y;
-    if ((BallX < playerX + 32 && BallX >= playerX + 16) && (BallY < playerY + 64 && BallY >= playerY)){
-        if (BallY < playerY + 32 && BallY > playerY + 26){
+    if ((BallX < playerX + 32 && (LastBallX > playerX + 32 || BallX >= playerX + 16)) && (BallY < playerY + 64 && BallY + 16 >= playerY)){
+        if (BallY < playerY + 64 && BallY > playerY + 58){
             BallSpeedY = 5;
-            BallY = playerY + 32;
         }
         else if (BallY + 16 < playerY + 6 && BallY + 16 > playerY){
             BallSpeedY = -5;
-            BallY = playerY;
         }
         else{
             BallX = playerX;
@@ -142,7 +143,7 @@ void checkCollision(){
         }
         CurrentBallDirection = LEFT;
     }
-    else if ((BallX < enemyX + 32 && BallX >= enemyX) && (BallY < enemyY + 64 && BallY + 16 >= enemyY)){
+    else if ((BallX >= enemyX && (LastBallX < enemyX || BallX < enemyX + 40)) && (BallY < enemyY + 64 && BallY + 16 >= enemyY)){
         BallX = enemyX + 32;
         BallSpeed = -BallSpeed;
         if (Acceleration == 2){
@@ -175,13 +176,16 @@ void checkCollision(){
         CurrentBallDirection = RIGHT;
     }
     else if (BallX > pp_fieldX){
+        BallX = playerX - 20;
         ball.setPosition(playerX - 40, playerY + 32);
-        BallSpeed = 4;
+        BallSpeed = -4;
         BallSpeedY = 0;
         VarEnemyScore++;
         EnemyScore.setString(to_string(VarEnemyScore));
+        PlayerFail = true;
     }
     else if (BallX < 0){
+        BallX = enemyX + 40;
         ball.setPosition(enemyX + 40, enemyY + 32);
         BallSpeed = -4;
         BallSpeedY = 0;
@@ -202,52 +206,74 @@ void checkCollision(){
     }
 }
 void moveball(){
-    ball.move(BallSpeed, BallSpeedY);
-    BallX = ball.getPosition().x;
-    BallY = ball.getPosition().y;
-    if (BallY < 0){
-        BallY = 0;
-        ball.setPosition(BallX, BallY);
+    if (PlayerFail == false){
+        LastBallX = BallX;
+        ball.move(BallSpeed, BallSpeedY);
+        BallX = ball.getPosition().x;
+        BallY = ball.getPosition().y;
+        if (BallY < 0){
+            BallY = 0;
+            ball.setPosition(BallX, BallY);
+        }
+        else if (BallY > pp_fieldY - 8){
+            BallY = pp_fieldY - 8;
+            ball.setPosition(BallX, BallY);
+        }
     }
-    else if (BallY > pp_fieldY - 8){
-        BallY = pp_fieldY - 8;
-        ball.setPosition(BallX, BallY);
+    else{
+        BallY = playerY + 32;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+            switch(CurrentPlayerPlatformDirection){
+            case UP:
+                BallSpeedY = -3;
+                break;
+            case DOWN:
+                BallSpeedY = 3;
+                break;
+            case STOP:
+                BallSpeedY = 0;
+                break;
+            }
+            PlayerFail = false;
+        }
     }
     checkCollision();
 }
 void moveEnemyBoard(){
-    int LastEnemyY = enemyY;
-    if (AIOrLM == 1){
-    int CurrentBallPosition = ball.getPosition().y - 16;
-        if (CurrentBallPosition > enemyY){
-            enemyY += 2.5;
+    if (PlayerFail == false){
+        int LastEnemyY = enemyY;
+        if (AIOrLM == 1){
+        int CurrentBallPosition = ball.getPosition().y - 16;
+            if (CurrentBallPosition > enemyY){
+                enemyY += 2.5;
+            }
+            else if (CurrentBallPosition < enemyY){
+                enemyY -= 2.5;
+            }
         }
-        else if (CurrentBallPosition < enemyY){
-            enemyY -= 2.5;
+        if (AIOrLM == 2){
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+                enemyY -= 4;
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+                enemyY += 4;
+            }
         }
-    }
-    if (AIOrLM == 2){
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-            enemyY -= 4;
+        if (enemyY > pp_fieldY - 64){
+            enemyY = pp_fieldY - 64;
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-            enemyY += 4;
+        else if (enemyY < 0){
+            enemyY = 0;
         }
-    }
-    if (enemyY > pp_fieldY - 64){
-        enemyY = pp_fieldY - 64;
-    }
-    else if (enemyY < 0){
-        enemyY = 0;
-    }
-    if (enemyY < LastEnemyY){
-        CurrentEnemyPlatformDirection = UP;
-    }
-    else if (enemyY > LastEnemyY){
-        CurrentEnemyPlatformDirection = DOWN;
-    }
-    else{
-        CurrentEnemyPlatformDirection = STOP;
+        if (enemyY < LastEnemyY){
+            CurrentEnemyPlatformDirection = UP;
+        }
+        else if (enemyY > LastEnemyY){
+            CurrentEnemyPlatformDirection = DOWN;
+        }
+        else{
+            CurrentEnemyPlatformDirection = STOP;
+        }
     }
 }
 
