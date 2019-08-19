@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="minigames_SFML" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/minigames_SFML" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="D:/kolya/SFML-2.5.1/lib/libsfml-audio-d.a" />
+					<Add library="D:/kolya/SFML-2.5.1/lib/libsfml-graphics-d.a" />
+					<Add library="D:/kolya/SFML-2.5.1/lib/libsfml-system-d.a" />
+					<Add library="D:/kolya/SFML-2.5.1/lib/libsfml-window-d.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/minigames_SFML" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="D:/kolya/SFML-2.5.1/lib/libsfml-audio.a" />
+					<Add library="D:/kolya/SFML-2.5.1/lib/libsfml-graphics.a" />
+					<Add library="D:/kolya/SFML-2.5.1/lib/libsfml-system.a" />
+					<Add library="D:/kolya/SFML-2.5.1/lib/libsfml-window.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=c++11" />
+			<Add option="-fexceptions" />
+			<Add directory="D:/kolya/SFML-2.5.1/include" />
+		</Compiler>
+		<Linker>
+			<Add directory="D:/kolya/SFML-2.5.1/lib" />
+		</Linker>
+		<Unit filename="AABB.h" />
+		<Unit filename="Running_Dinosaur.h" />
+		<Unit filename="catch.h" />
+		<Unit filename="doodle_jump.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="obstructions.h" />
+		<Unit filename="ping pong.h" />
+		<Unit filename="space invaders.h">
+			<Option compile="1" />
+		</Unit>
+		<Unit filename="system.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
