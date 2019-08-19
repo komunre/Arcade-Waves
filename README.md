@@ -11,4 +11,37 @@ How to install
 =====================
 Press "Clone or download", download zip, unpack all files in folder and download [music](https://drive.google.com/open?id=1-UvpLJJ_aG15Hj8zIG6V77QZtDrsFwC6) to folder other.
 
-You need SFML-2.5.1 to compile this code. Project file (Minigames_SFML.cbp) for code::blocks.
+How to compile:
+================
+Code::blocks:
+
+Connect the library as said [here](https://www.sfml-dev.org/tutorials/2.5/start-cb.php).
+
+Visual Studio:
+
+Connect the library as said [here](https://www.sfml-dev.org/tutorials/2.5/start-vc.php).
+
+README.md на русском
+=========================
+
+Это две аркады и ещё одна игра жанр которой я не могу определить. Они созданы с использованием библиотеки SDML-2.5.1 в code::blocks. Изображения располагаются в images, музыка расположена в other.
+
+Язык программирование: C++
+
+`Новейшая версяи: 1.1.5`
+
+Как установить
+===================
+
+Нажмите Clone or download в начале страницы, загрузите zip файл, распакуйте всё в одну папку и загрузите [музыку](https://drive.google.com/open?id=1-UvpLJJ_aG15Hj8zIG6V77QZtDrsFwC6) в папку other.
+
+Как компилировать
+====================
+
+Code::blocks:
+
+Подключите библиотеку, как сказано [тут](https://www.sfml-dev.org/tutorials/2.5/start-cb.php).
+
+Visual Studio:
+
+Подключите библиотеку, как сказано [тут](https://www.sfml-dev.org/tutorials/2.5/start-vc.php).
