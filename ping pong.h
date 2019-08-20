@@ -39,7 +39,6 @@ enum RacketDirection {UP, DOWN, STOP};
 RacketDirection CurrentEnemyPlatformDirection;
 RacketDirection CurrentPlayerPlatformDirection;
 sf::Clock LastPositionClock;
-bool PlayerFail = false;
 
 void pp_draw(){
     window.setActive(true);
@@ -56,6 +55,7 @@ void pp_draw(){
     PlayerScore.setPosition(400, 100);
     window.draw(PlayerScore);
     ball.setPosition(BallX, BallY);
+    window.draw(ball);
     window.setActive(false);
 }
 void moveboard(){
@@ -105,46 +105,46 @@ void checkCollision(){
             if (Acceleration == 2){
                 BallSpeed -= 0.3;
             }
-        }
-        switch(CurrentPlayerPlatformDirection){
-        case UP:
-            if (BallSpeedY <= 0){
-                BallSpeedY = -3;
-            }
-            else{
-                BallSpeedY = 0;
-            }
-            break;
-        case DOWN:
-            if (BallSpeedY >= 0){
-                BallSpeedY = 3;
-            }
-            else{
-                BallSpeedY = 0;
-            }
-            break;
-        case STOP:
-            if (BallY < playerY + 16 && BallY > playerY){
+            switch(CurrentPlayerPlatformDirection){
+            case UP:
                 if (BallSpeedY <= 0){
                     BallSpeedY = -3;
                 }
                 else{
                     BallSpeedY = 0;
                 }
-            }
-            else if (BallY < playerY + 64 && BallY > playerY + 32){
+                break;
+            case DOWN:
                 if (BallSpeedY >= 0){
-                    BallSpeedY = 3;
+                BallSpeedY = 3;
                 }
                 else{
                     BallSpeedY = 0;
                 }
+                break;
+            case STOP:
+                if (BallY < playerY + 16 && BallY > playerY){
+                    if (BallSpeedY <= 0){
+                        BallSpeedY = -3;
+                    }
+                    else{
+                        BallSpeedY = 0;
+                    }
+                }
+                else if (BallY < playerY + 64 && BallY > playerY + 32){
+                    if (BallSpeedY >= 0){
+                        BallSpeedY = 3;
+                    }
+                    else{
+                        BallSpeedY = 0;
+                    }
+                }
             }
+            CurrentBallDirection = LEFT;
         }
-        CurrentBallDirection = LEFT;
     }
     else if ((BallX >= enemyX && (LastBallX < enemyX || BallX < enemyX + 40)) && (BallY < enemyY + 64 && BallY + 16 >= enemyY)){
-        BallX = enemyX + 32;
+        BallX = enemyX + 42;
         BallSpeed = -BallSpeed;
         if (Acceleration == 2){
             BallSpeed += 0.3;
@@ -176,13 +176,13 @@ void checkCollision(){
         CurrentBallDirection = RIGHT;
     }
     else if (BallX > pp_fieldX){
-        BallX = playerX - 20;
+        BallY = playerY + 32;
+        BallX = playerX - 40;
         ball.setPosition(playerX - 40, playerY + 32);
-        BallSpeed = -4;
+        BallSpeed = 4;
         BallSpeedY = 0;
         VarEnemyScore++;
         EnemyScore.setString(to_string(VarEnemyScore));
-        PlayerFail = true;
     }
     else if (BallX < 0){
         BallX = enemyX + 40;
@@ -206,19 +206,17 @@ void checkCollision(){
     }
 }
 void moveball(){
-    if (PlayerFail == false){
-        LastBallX = BallX;
-        ball.move(BallSpeed, BallSpeedY);
-        BallX = ball.getPosition().x;
-        BallY = ball.getPosition().y;
-        if (BallY < 0){
-            BallY = 0;
-            ball.setPosition(BallX, BallY);
-        }
-        else if (BallY > pp_fieldY - 8){
-            BallY = pp_fieldY - 8;
-            ball.setPosition(BallX, BallY);
-        }
+    LastBallX = BallX;
+    ball.move(BallSpeed, BallSpeedY);
+    BallX = ball.getPosition().x;
+    BallY = ball.getPosition().y;
+    if (BallY < 0){
+        BallY = 0;
+        ball.setPosition(BallX, BallY);
+    }
+    else if (BallY > pp_fieldY - 8){
+        BallY = pp_fieldY - 8;
+        ball.setPosition(BallX, BallY);
     }
     else{
         BallY = playerY + 32;
@@ -234,46 +232,43 @@ void moveball(){
                 BallSpeedY = 0;
                 break;
             }
-            PlayerFail = false;
         }
     }
     checkCollision();
 }
 void moveEnemyBoard(){
-    if (PlayerFail == false){
-        int LastEnemyY = enemyY;
-        if (AIOrLM == 1){
-        int CurrentBallPosition = ball.getPosition().y - 16;
-            if (CurrentBallPosition > enemyY){
-                enemyY += 2.5;
-            }
-            else if (CurrentBallPosition < enemyY){
-                enemyY -= 2.5;
-            }
+    int LastEnemyY = enemyY;
+    if (AIOrLM == 1){
+    int CurrentBallPosition = ball.getPosition().y - 16;
+        if (CurrentBallPosition > enemyY){
+            enemyY += 2.5;
         }
-        if (AIOrLM == 2){
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-                enemyY -= 4;
-            }
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-                enemyY += 4;
-            }
+        else if (CurrentBallPosition < enemyY){
+            enemyY -= 2.5;
         }
-        if (enemyY > pp_fieldY - 64){
-            enemyY = pp_fieldY - 64;
+    }
+    if (AIOrLM == 2){
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+            enemyY -= 4;
         }
-        else if (enemyY < 0){
-            enemyY = 0;
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+            enemyY += 4;
         }
-        if (enemyY < LastEnemyY){
-            CurrentEnemyPlatformDirection = UP;
-        }
-        else if (enemyY > LastEnemyY){
-            CurrentEnemyPlatformDirection = DOWN;
-        }
-        else{
-            CurrentEnemyPlatformDirection = STOP;
-        }
+    }
+    if (enemyY > pp_fieldY - 64){
+        enemyY = pp_fieldY - 64;
+    }
+    else if (enemyY < 0){
+        enemyY = 0;
+    }
+    if (enemyY < LastEnemyY){
+        CurrentEnemyPlatformDirection = UP;
+    }
+    else if (enemyY > LastEnemyY){
+        CurrentEnemyPlatformDirection = DOWN;
+    }
+    else{
+        CurrentEnemyPlatformDirection = STOP;
     }
 }
 
