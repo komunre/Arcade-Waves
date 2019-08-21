@@ -4,7 +4,7 @@ There is two arcades and some one game. They created with using library SFML-2.5
 
 Programming language: C++
 
-`Newest version: 1.1.5`
+`Newest version: 1.1.6`
 
 
 How to install
