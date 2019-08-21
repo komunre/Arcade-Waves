@@ -29,6 +29,7 @@ const int enemyX = 38;
 float enemyY = pp_fieldY / 2;
 float BallX;
 float BallY;
+float LastBallX;
 float BallSpeed = 4;
 float BallSpeedY = 0;
 int Highscore[2] = {0, 0};
@@ -53,6 +54,8 @@ void pp_draw(){
     window.draw(EnemyScore);
     PlayerScore.setPosition(400, 100);
     window.draw(PlayerScore);
+    ball.setPosition(BallX, BallY);
+    window.draw(ball);
     window.setActive(false);
 }
 void moveboard(){
@@ -89,14 +92,12 @@ void moveboard(){
 void checkCollision(){
     BallX = ball.getPosition().x;
     BallY = ball.getPosition().y;
-    if ((BallX < playerX + 32 && BallX >= playerX + 16) && (BallY < playerY + 64 && BallY >= playerY)){
-        if (BallY < playerY + 32 && BallY > playerY + 26){
+    if ((BallX < playerX + 32 && (LastBallX > playerX + 32 || BallX >= playerX + 16)) && (BallY < playerY + 64 && BallY + 16 >= playerY)){
+        if (BallY < playerY + 64 && BallY > playerY + 58){
             BallSpeedY = 5;
-            BallY = playerY + 32;
         }
         else if (BallY + 16 < playerY + 6 && BallY + 16 > playerY){
             BallSpeedY = -5;
-            BallY = playerY;
         }
         else{
             BallX = playerX;
@@ -104,46 +105,46 @@ void checkCollision(){
             if (Acceleration == 2){
                 BallSpeed -= 0.3;
             }
-        }
-        switch(CurrentPlayerPlatformDirection){
-        case UP:
-            if (BallSpeedY <= 0){
-                BallSpeedY = -3;
-            }
-            else{
-                BallSpeedY = 0;
-            }
-            break;
-        case DOWN:
-            if (BallSpeedY >= 0){
-                BallSpeedY = 3;
-            }
-            else{
-                BallSpeedY = 0;
-            }
-            break;
-        case STOP:
-            if (BallY < playerY + 16 && BallY > playerY){
+            switch(CurrentPlayerPlatformDirection){
+            case UP:
                 if (BallSpeedY <= 0){
                     BallSpeedY = -3;
                 }
                 else{
                     BallSpeedY = 0;
                 }
-            }
-            else if (BallY < playerY + 64 && BallY > playerY + 32){
+                break;
+            case DOWN:
                 if (BallSpeedY >= 0){
-                    BallSpeedY = 3;
+                BallSpeedY = 3;
                 }
                 else{
                     BallSpeedY = 0;
                 }
+                break;
+            case STOP:
+                if (BallY < playerY + 16 && BallY > playerY){
+                    if (BallSpeedY <= 0){
+                        BallSpeedY = -3;
+                    }
+                    else{
+                        BallSpeedY = 0;
+                    }
+                }
+                else if (BallY < playerY + 64 && BallY > playerY + 32){
+                    if (BallSpeedY >= 0){
+                        BallSpeedY = 3;
+                    }
+                    else{
+                        BallSpeedY = 0;
+                    }
+                }
             }
+            CurrentBallDirection = LEFT;
         }
-        CurrentBallDirection = LEFT;
     }
-    else if ((BallX < enemyX + 32 && BallX >= enemyX) && (BallY < enemyY + 64 && BallY + 16 >= enemyY)){
-        BallX = enemyX + 32;
+    else if ((BallX >= enemyX && (LastBallX < enemyX || BallX < enemyX + 40)) && (BallY < enemyY + 64 && BallY + 16 >= enemyY)){
+        BallX = enemyX + 42;
         BallSpeed = -BallSpeed;
         if (Acceleration == 2){
             BallSpeed += 0.3;
@@ -175,6 +176,8 @@ void checkCollision(){
         CurrentBallDirection = RIGHT;
     }
     else if (BallX > pp_fieldX){
+        BallY = playerY + 32;
+        BallX = playerX - 40;
         ball.setPosition(playerX - 40, playerY + 32);
         BallSpeed = 4;
         BallSpeedY = 0;
@@ -182,6 +185,7 @@ void checkCollision(){
         EnemyScore.setString(to_string(VarEnemyScore));
     }
     else if (BallX < 0){
+        BallX = enemyX + 40;
         ball.setPosition(enemyX + 40, enemyY + 32);
         BallSpeed = -4;
         BallSpeedY = 0;
@@ -202,6 +206,7 @@ void checkCollision(){
     }
 }
 void moveball(){
+    LastBallX = BallX;
     ball.move(BallSpeed, BallSpeedY);
     BallX = ball.getPosition().x;
     BallY = ball.getPosition().y;
@@ -212,6 +217,22 @@ void moveball(){
     else if (BallY > pp_fieldY - 8){
         BallY = pp_fieldY - 8;
         ball.setPosition(BallX, BallY);
+    }
+    else{
+        BallY = playerY + 32;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+            switch(CurrentPlayerPlatformDirection){
+            case UP:
+                BallSpeedY = -3;
+                break;
+            case DOWN:
+                BallSpeedY = 3;
+                break;
+            case STOP:
+                BallSpeedY = 0;
+                break;
+            }
+        }
     }
     checkCollision();
 }
